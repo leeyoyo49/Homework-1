@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/* Problem 1 Interface & Contract */
 contract StudentV1 {
-    // Note: You can declare some state variable
-
+    uint256 public studentCount;
     function register() external returns (uint256) {
-        // TODO: please add your implementaiton here
+        if(studentCount == 0) {
+            studentCount++;
+            return 1000;
+        }
+        else {
+            return 123;
+        }
     }
 }
 
@@ -16,8 +20,9 @@ interface IClassroomV2 {
 }
 
 contract StudentV2 {
-    function register() external view returns (uint256) {
-        // TODO: please add your implementaiton here
+    uint256 private studentCount; // Declaring a private state variable to keep track of the number of registered students
+
+    function register() external returns (uint256) {
     }
 }
 
