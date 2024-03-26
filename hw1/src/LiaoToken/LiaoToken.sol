@@ -14,8 +14,8 @@ interface IERC20 {
 }
 
 contract LiaoToken is IERC20 {
-    // TODO: you might need to declare several state variable here
-    mapping(address account => uint256) private _balances;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping (address => uint256)) private _allowances;
     mapping(address account => bool) isClaim;
 
     uint256 private _totalSupply;
@@ -55,22 +55,41 @@ contract LiaoToken is IERC20 {
         _balances[msg.sender] += 1 ether;
         _totalSupply += 1 ether;
         emit Claim(msg.sender, 1 ether);
+        isClaim[msg.sender] = true;
         return true;
     }
 
     function transfer(address to, uint256 amount) external returns (bool) {
-        // TODO: please add your implementaiton here
+        _transfer(msg.sender, to, amount);
+        return true;
     }
 
     function transferFrom(address from, address to, uint256 value) external returns (bool) {
-        // TODO: please add your implementaiton here
+        _transfer(from, to, value);
+        _approve(from, msg.sender, _allowances[from][msg.sender] - value);
+        return true;
+    }
+
+    function _transfer(address from, address to, uint256 value) private {
+        require(_balances[from] >= value, 'Insufficient balance');
+        _balances[from] -= value;
+        _balances[to] += value;
+        emit Transfer(from, to, value);
     }
 
     function approve(address spender, uint256 amount) external returns (bool) {
-        // TODO: please add your implementaiton here
+        _approve(msg.sender, spender, amount);
+        return true;
     }
 
     function allowance(address owner, address spender) public view returns (uint256) {
-        // TODO: please add your implementaiton here
+        return _allowances[owner][spender];
+    }
+
+    function _approve(address owner, address spender, uint256 amount) private {
+        require(owner != address(0), 'Owner address cannot be zero');
+        require(spender != address(0), 'Spender address cannot be zero');
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
     }
 }
