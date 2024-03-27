@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import {console} from "forge-std/Test.sol";
 
 contract StudentV1 {
     uint256 public studentCount;
@@ -20,15 +21,30 @@ interface IClassroomV2 {
 }
 
 contract StudentV2 {
-    uint256 private studentCount; // Declaring a private state variable to keep track of the number of registered students
-
-    function register() external returns (uint256) {
+    address public sender;
+    constructor(){
+        sender = msg.sender;
+    }
+    function register() external view returns (uint256) {
+        if(IClassroomV2(sender).isEnrolled()) {
+            return 123;
+        }
+        else {
+            return 1000;
+        }
     }
 }
+
 
 /* Problem 3 Interface & Contract */
 contract StudentV3 {
     function register() external view returns (uint256) {
-        // TODO: please add your implementaiton here
+        uint aftergas = gasleft();
+        if(aftergas < 7191) {
+            return 123;
+        }
+        else {
+            return 10000;
+        }
     }
 }
